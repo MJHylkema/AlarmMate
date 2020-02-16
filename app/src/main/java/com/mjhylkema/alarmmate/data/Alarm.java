@@ -13,13 +13,13 @@ import com.mjhylkema.alarmmate.utils.Converters;
 import java.util.Calendar;
 
 @Entity(tableName = "alarm_table")
-@TypeConverters({Converters.class})
+@TypeConverters(Converters.class)
 public class Alarm {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "alarm_id")
-    private int mId;
+    public int mId;
 
     @ColumnInfo(name = "alarm_title")
     private String mTitle;
@@ -39,6 +39,9 @@ public class Alarm {
     @ColumnInfo(name = "alarm_location")
     public LatLng mLocation;
 
+    public Alarm() {
+    }
+
     @Ignore
     public Alarm(String title, Calendar time, boolean active, boolean[] activeDays, boolean repeated, LatLng location)
     {
@@ -47,6 +50,54 @@ public class Alarm {
         this.mActive = active;
         this.mActiveDays = activeDays;
         this.mRepeated = repeated;
+        this.mLocation = location;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        this.mTitle = title;
+    }
+
+    public Calendar getTime() {
+        return mTime;
+    }
+
+    public void setTime(Calendar time) {
+        this.mTime = time;
+    }
+
+    public boolean isActive() {
+        return mActive;
+    }
+
+    public void setActive(boolean active) {
+        this.mActive = active;
+    }
+
+    public boolean[] getActiveDays() {
+        return mActiveDays;
+    }
+
+    public void setActiveDays(boolean[] activeDays) {
+        this.mActiveDays = activeDays;
+    }
+
+    public boolean isRepeated() {
+        return mRepeated;
+    }
+
+    public void setRepeated(boolean repeated) {
+        this.mRepeated = repeated;
+    }
+
+    public LatLng getLocation() {
+        return mLocation;
+    }
+
+    public void setLocation(LatLng location) {
         this.mLocation = location;
     }
 }
