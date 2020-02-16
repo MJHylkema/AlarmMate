@@ -9,5 +9,13 @@
         android:id="@+id/mainFragment"
         android:name="com.mjhylkema.alarmmate.ui.MainFragment"
         android:label="main_fragment"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_addAlarmFragment"
+            app:destination="@id/addAlarmFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addAlarmFragment"
+        android:name="com.mjhylkema.alarmmate.ui.AddAlarmFragment"
+        android:label="AddAlarmFragment" />
 </navigation>
