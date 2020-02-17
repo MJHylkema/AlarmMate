@@ -17,5 +17,6 @@
     <fragment
         android:id="@+id/addAlarmFragment"
         android:name="com.mjhylkema.alarmmate.ui.AddAlarmFragment"
-        android:label="AddAlarmFragment" />
+        android:label="AddAlarmFragment"
+        tools:layout="@layout/fragment_add_alarm" />
 </navigation>
