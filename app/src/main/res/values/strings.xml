@@ -5,4 +5,5 @@
     <!-- AddAlarmFragment -->
     <string name="alarm">Alarm</string>
     <string name="time">Time</string>
+    <string name="repeat">Repeat</string>
 </resources>

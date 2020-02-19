@@ -31,6 +31,8 @@ public class AddAlarmFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this).get(AddAlarmViewModel.class);
 
         addSetTimeListener();
+        addRepeatListener();
+
 
         return binding.getRoot();
     }
@@ -56,6 +58,15 @@ public class AddAlarmFragment extends Fragment {
                 }, hour, minute, false);
                 timePicker.setTitle("Select Time");
                 timePicker.show();
+            }
+        });
+    }
+
+    private void addRepeatListener() {
+        binding.addAlarmRepeatLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.addAlarmRepeatSwitch.toggle();
             }
         });
     }
