@@ -4,6 +4,7 @@ import androidx.room.TypeConverter;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,7 +28,7 @@ public class Converters {
     }
 
     @TypeConverter
-    public LatLng latLngFromString(String value) {
+    public static LatLng latLngFromString(String value) {
         String[] splitValue = value.split(":");
         return new LatLng(
                 Double.parseDouble(splitValue[0]),
@@ -36,12 +37,12 @@ public class Converters {
     }
 
     @TypeConverter
-    public String latLngToString(LatLng latLng) {
+    public static String latLngToString(LatLng latLng) {
         return latLng.latitude + ":" + latLng.longitude;
     }
 
     @TypeConverter
-    public boolean[] booleanArrayFromString(String value) {
+    public static boolean[] booleanArrayFromString(String value) {
         boolean[] arr = new boolean[7];
         if (value.equals("")) {
             return arr;
@@ -58,7 +59,7 @@ public class Converters {
     }
 
     @TypeConverter
-    public String booleanArrayToString(boolean[] arr) {
+    public static String booleanArrayToString(boolean[] arr) {
         StringBuilder builder = new StringBuilder();
         if (arr == null) {
             return "";
@@ -70,5 +71,12 @@ public class Converters {
             builder.setLength(builder.length() - 1);
         }
         return builder.toString();
+    }
+
+    @TypeConverter
+    public static String calendarToTime(Calendar calendar)
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat ("hh:mm aa");
+        return formatter.format(calendar.getTime());
     }
 }

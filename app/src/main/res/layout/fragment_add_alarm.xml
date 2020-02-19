@@ -6,6 +6,13 @@
 
     <data>
 
+        <import type="com.mjhylkema.alarmmate.utils.Converters"/>
+
+        <variable
+            name="viewModel"
+            type="com.mjhylkema.alarmmate.ui.addAlarm.AddAlarmViewModel"
+            />
+
         <variable
             name="actionListener"
             type="com.mjhylkema.alarmmate.ui.addAlarm.AddAlarmActionListener" />
@@ -74,6 +81,7 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@string/font_family_medium"
                 android:textSize="@dimen/font_big"
+                android:text="@{Converters.calendarToTime(viewModel.mAlarmTime)}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 

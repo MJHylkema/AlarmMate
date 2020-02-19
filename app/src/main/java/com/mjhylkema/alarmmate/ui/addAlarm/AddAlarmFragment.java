@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.mjhylkema.alarmmate.databinding.FragmentAddAlarmBinding;
 import com.mjhylkema.alarmmate.ui.dialogs.AlarmTimeDialog;
 
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class AddAlarmFragment extends Fragment {
 
@@ -35,11 +35,9 @@ public class AddAlarmFragment extends Fragment {
 
         AddAlarmActionListener actionListener = getAddAlarmActionListener();
         mBinding.setActionListener(actionListener);
-
         mBinding.setLifecycleOwner(this);
 
-        //addSetTimeListener();
-        //addRepeatListener();
+        mBinding.setViewModel(mViewModel);
 
         return mBinding.getRoot();
     }
@@ -59,7 +57,7 @@ public class AddAlarmFragment extends Fragment {
     }
 
     private void setupTimePicker() {
-        AlarmTimeDialog dialogFragment = AlarmTimeDialog.newInstance(mViewModel.mAlarmTime.getTimeInMillis());
+        AlarmTimeDialog dialogFragment = AlarmTimeDialog.newInstance(mViewModel.mAlarmTime.get().getTimeInMillis());
         dialogFragment.setTargetFragment(AddAlarmFragment.this, REQUEST_ALARM_TIME);
         dialogFragment.show(getFragmentManager(), DIALOG_TIME_PICKER);
     }
@@ -76,10 +74,9 @@ public class AddAlarmFragment extends Fragment {
 
         switch (requestCode) {
             case REQUEST_ALARM_TIME:
-                long alarmTime = data.getLongExtra(AlarmTimeDialog.OUT_DATE, 0);
-                mViewModel.mAlarmTime.setTimeInMillis(alarmTime);
-                SimpleDateFormat formatter = new SimpleDateFormat ("hh:mm aa");
-                mBinding.addAlarmTimeText.setText(formatter.format(mViewModel.mAlarmTime.getTime()));
+                Calendar response = Calendar.getInstance();
+                response.setTimeInMillis(data.getLongExtra(AlarmTimeDialog.OUT_DATE, 0));
+                mViewModel.mAlarmTime.set(response);
                 break;
         }
 
