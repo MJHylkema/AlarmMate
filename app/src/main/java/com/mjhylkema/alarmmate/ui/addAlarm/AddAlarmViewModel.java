@@ -1,4 +1,4 @@
-package com.mjhylkema.alarmmate.ui;
+package com.mjhylkema.alarmmate.ui.addAlarm;
 
 import android.app.Application;
 
@@ -8,11 +8,11 @@ import java.util.Calendar;
 
 public class AddAlarmViewModel extends AndroidViewModel {
 
-    public Calendar calendar;
+    public Calendar mAlarmTime;
 
     public AddAlarmViewModel(Application application) {
         super(application);
-        calendar = Calendar.getInstance();
+        mAlarmTime = Calendar.getInstance();
     }
 
 }
