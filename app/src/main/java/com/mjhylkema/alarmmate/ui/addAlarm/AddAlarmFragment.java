@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.mjhylkema.alarmmate.databinding.FragmentAddAlarmBinding;
+import com.mjhylkema.alarmmate.ui.dialogs.AlarmActiveDaysDialog;
 import com.mjhylkema.alarmmate.ui.dialogs.AlarmTimeDialog;
 
 import java.util.Calendar;
@@ -20,7 +21,9 @@ import java.util.Calendar;
 public class AddAlarmFragment extends Fragment {
 
     private static final String DIALOG_TIME_PICKER = "TIME_PICKER";
+    private static final String DIALOG_ACTIVE_DAYS_PICKER = "ACTIVE_DAYS_PICKER";
     private static final int REQUEST_ALARM_TIME = 1;
+    private static final int REQUEST_ACTIVE_DAYS = 2;
 
     private AddAlarmViewModel mViewModel;
     private FragmentAddAlarmBinding mBinding;
@@ -50,8 +53,8 @@ public class AddAlarmFragment extends Fragment {
             }
 
             @Override
-            public void onRepeatedClicked() {
-                setupRepeated();
+            public void onActiveDaysClicked() {
+                setupActiveDays();
             }
         };
     }
@@ -62,8 +65,10 @@ public class AddAlarmFragment extends Fragment {
         dialogFragment.show(getFragmentManager(), DIALOG_TIME_PICKER);
     }
 
-    private void setupRepeated() {
-        mBinding.addAlarmRepeatSwitch.toggle();
+    private void setupActiveDays() {
+        AlarmActiveDaysDialog dialogFragment = AlarmActiveDaysDialog.newInstance(mViewModel.mActiveDays.get());
+        dialogFragment.setTargetFragment(AddAlarmFragment.this, REQUEST_ACTIVE_DAYS);
+        dialogFragment.show(getFragmentManager(), DIALOG_ACTIVE_DAYS_PICKER);
     }
 
     @Override
@@ -74,10 +79,13 @@ public class AddAlarmFragment extends Fragment {
 
         switch (requestCode) {
             case REQUEST_ALARM_TIME:
-                Calendar response = Calendar.getInstance();
-                response.setTimeInMillis(data.getLongExtra(AlarmTimeDialog.OUT_DATE, 0));
-                mViewModel.mAlarmTime.set(response);
+                Calendar calendarResponse = Calendar.getInstance();
+                calendarResponse.setTimeInMillis(data.getLongExtra(AlarmTimeDialog.OUT_DATE, 0));
+                mViewModel.mAlarmTime.set(calendarResponse);
                 break;
+            case REQUEST_ACTIVE_DAYS:
+                boolean[] boolArrayResponse = data.getBooleanArrayExtra(AlarmActiveDaysDialog.OUT_ACTIVE_DAYS);
+                mViewModel.mActiveDays.set(boolArrayResponse);
         }
 
     }
