@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.mjhylkema.alarmmate.utils.Converters;
+import com.mjhylkema.alarmmate.utils.RoomConverters;
 
 import java.util.Calendar;
 
@@ -22,7 +22,6 @@ public class AlarmTimeDialog extends DialogFragment {
 
     private static final String ARG_DATE = "DATE";
     private Calendar mCalendar;
-    private long mOutboundTime;
 
     public static AlarmTimeDialog newInstance(long date) {
         Bundle args = new Bundle();
@@ -40,7 +39,7 @@ public class AlarmTimeDialog extends DialogFragment {
         if (argDate == 0) {
             mCalendar = Calendar.getInstance();
         } else {
-            mCalendar = Converters.calendarFromLong(argDate);
+            mCalendar = RoomConverters.calendarFromLong(argDate);
         }
         int hour, minute;
 
@@ -62,8 +61,8 @@ public class AlarmTimeDialog extends DialogFragment {
                     mCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
                     mCalendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
                 }
-                mOutboundTime = Converters.calendarToLong(mCalendar);
-                sendResult(Activity.RESULT_OK, mOutboundTime);
+                long outboundTime = RoomConverters.calendarToLong(mCalendar);
+                sendResult(Activity.RESULT_OK, outboundTime);
                 dismiss();
             }
         }, hour, minute, false);

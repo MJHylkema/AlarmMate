@@ -8,10 +8,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.mjhylkema.alarmmate.utils.Converters;
+import com.mjhylkema.alarmmate.utils.RoomConverters;
 
 @Database(entities = {Alarm.class}, version = 1, exportSchema = false)
-@TypeConverters(Converters.class)
+@TypeConverters(RoomConverters.class)
 public abstract class AlarmDatabase extends RoomDatabase {
 
     private static AlarmDatabase mINSTANCE;

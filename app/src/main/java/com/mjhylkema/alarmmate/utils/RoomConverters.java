@@ -4,13 +4,12 @@ import androidx.room.TypeConverter;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class Converters {
+public class RoomConverters {
 
     @TypeConverter
     public static Calendar calendarFromLong(long value) {
@@ -73,10 +72,5 @@ public class Converters {
         return builder.toString();
     }
 
-    @TypeConverter
-    public static String calendarToTime(Calendar calendar)
-    {
-        SimpleDateFormat formatter = new SimpleDateFormat ("hh:mm aa");
-        return formatter.format(calendar.getTime());
-    }
+
 }

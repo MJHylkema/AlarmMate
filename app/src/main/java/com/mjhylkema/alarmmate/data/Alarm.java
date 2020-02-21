@@ -8,12 +8,12 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.mjhylkema.alarmmate.utils.Converters;
+import com.mjhylkema.alarmmate.utils.RoomConverters;
 
 import java.util.Calendar;
 
 @Entity(tableName = "alarm_table")
-@TypeConverters(Converters.class)
+@TypeConverters(RoomConverters.class)
 public class Alarm {
 
     @PrimaryKey(autoGenerate = true)
