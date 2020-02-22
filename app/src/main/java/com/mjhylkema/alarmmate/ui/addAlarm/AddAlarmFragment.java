@@ -13,17 +13,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.mjhylkema.alarmmate.databinding.FragmentAddAlarmBinding;
-import com.mjhylkema.alarmmate.ui.dialogs.AlarmActiveDaysDialog;
 import com.mjhylkema.alarmmate.ui.dialogs.AlarmTimeDialog;
 
 import java.util.Calendar;
+import java.util.List;
+
+import ca.antonious.materialdaypicker.MaterialDayPicker;
+import ca.antonious.materialdaypicker.MaterialDayPicker.Weekday;
 
 public class AddAlarmFragment extends Fragment {
 
     private static final String DIALOG_TIME_PICKER = "TIME_PICKER";
-    private static final String DIALOG_ACTIVE_DAYS_PICKER = "ACTIVE_DAYS_PICKER";
     private static final int REQUEST_ALARM_TIME = 1;
-    private static final int REQUEST_ACTIVE_DAYS = 2;
 
     private AddAlarmViewModel mViewModel;
     private FragmentAddAlarmBinding mBinding;
@@ -38,9 +39,10 @@ public class AddAlarmFragment extends Fragment {
 
         AddAlarmActionListener actionListener = getAddAlarmActionListener();
         mBinding.setActionListener(actionListener);
+        mBinding.setViewModel(mViewModel);
         mBinding.setLifecycleOwner(this);
 
-        mBinding.setViewModel(mViewModel);
+        setupDaySelectionListener();
 
         return mBinding.getRoot();
     }
@@ -53,8 +55,8 @@ public class AddAlarmFragment extends Fragment {
             }
 
             @Override
-            public void onActiveDaysClicked() {
-                setupActiveDays();
+            public void onSetRepeatClicked() {
+                mViewModel.mRepeated.set(!mViewModel.mRepeated.get());
             }
         };
     }
@@ -65,10 +67,21 @@ public class AddAlarmFragment extends Fragment {
         dialogFragment.show(getFragmentManager(), DIALOG_TIME_PICKER);
     }
 
-    private void setupActiveDays() {
-        AlarmActiveDaysDialog dialogFragment = AlarmActiveDaysDialog.newInstance(mViewModel.mActiveDays.get());
-        dialogFragment.setTargetFragment(AddAlarmFragment.this, REQUEST_ACTIVE_DAYS);
-        dialogFragment.show(getFragmentManager(), DIALOG_ACTIVE_DAYS_PICKER);
+    private void setupDaySelectionListener() {
+        mBinding.addAlarmDayPicker.setDaySelectionChangedListener(new MaterialDayPicker.DaySelectionChangedListener() {
+            @Override
+            public void onDaySelectionChanged(List<Weekday> list) {
+                boolean[] activeDays = mViewModel.mActiveDays.get().clone();
+                activeDays[0] = list.indexOf(Weekday.SUNDAY) > 0;
+                activeDays[1] = list.indexOf(Weekday.MONDAY) > 0;
+                activeDays[2] = list.indexOf(Weekday.TUESDAY) > 0;
+                activeDays[3] = list.indexOf(Weekday.WEDNESDAY) > 0;
+                activeDays[4] = list.indexOf(Weekday.THURSDAY) > 0;
+                activeDays[5] = list.indexOf(Weekday.FRIDAY) > 0;
+                activeDays[6] = list.indexOf(Weekday.SATURDAY) > 0;
+                mViewModel.mActiveDays.set(activeDays);
+            }
+        });
     }
 
     @Override
@@ -83,9 +96,6 @@ public class AddAlarmFragment extends Fragment {
                 calendarResponse.setTimeInMillis(data.getLongExtra(AlarmTimeDialog.OUT_DATE, 0));
                 mViewModel.mAlarmTime.set(calendarResponse);
                 break;
-            case REQUEST_ACTIVE_DAYS:
-                boolean[] boolArrayResponse = data.getBooleanArrayExtra(AlarmActiveDaysDialog.OUT_ACTIVE_DAYS);
-                mViewModel.mActiveDays.set(boolArrayResponse);
         }
 
     }

@@ -6,6 +6,7 @@
 
     <data>
 
+        <import type="android.view.View"/>
         <import type="com.mjhylkema.alarmmate.utils.StringConverter"/>
 
         <variable
@@ -22,6 +23,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         tools:context=".ui.addAlarm.AddAlarmFragment">
 
         <TextView
@@ -87,7 +89,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/add_alarm_repeat_layout"
             style="@style/settingsItem"
@@ -97,7 +98,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{() -> actionListener.onActiveDaysClicked()}"
+            android:onClick="@{() -> actionListener.onSetRepeatClicked()}"
             app:layout_constraintTop_toBottomOf="@id/add_alarm_time_layout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
@@ -123,19 +124,65 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/add_alarm_repeat_icon"/>
 
-            <TextView
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/add_alarm_repeat_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:fontFamily="@string/font_family_medium"
-                android:textSize="@dimen/font_big"
-                android:text="@{StringConverter.daysOfWeekAsString(viewModel.mActiveDays)}"
+                android:clickable="false"
+                android:checked="@{viewModel.mRepeated}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/add_alarm_repeated_days_layout"
+            style="@style/settingsItem"
+            android:visibility="@{viewModel.mRepeated ? View.VISIBLE : View.GONE}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/add_alarm_repeat_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <ca.antonious.materialdaypicker.MaterialDayPicker
+                android:id="@+id/add_alarm_day_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <View
+            android:id="@+id/add_alarm_condition_div"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@color/colorAccent"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:layout_marginEnd="@dimen/spacing_small"
+            app:layout_constraintTop_toBottomOf="@id/add_alarm_repeated_days_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/add_alarm_condition_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_huge"
+            android:layout_marginTop="@dimen/spacing_big"
+            android:fontFamily="@string/font_family_medium"
+            android:text="@string/condition"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/font_small"
+            app:layout_constraintTop_toBottomOf="@+id/add_alarm_condition_div"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
