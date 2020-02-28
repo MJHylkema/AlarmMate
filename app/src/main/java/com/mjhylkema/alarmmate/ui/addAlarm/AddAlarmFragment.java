@@ -12,9 +12,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.mjhylkema.alarmmate.R;
 import com.mjhylkema.alarmmate.databinding.FragmentAddAlarmBinding;
 import com.mjhylkema.alarmmate.ui.dialogs.AlarmTimeDialog;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -25,6 +32,7 @@ public class AddAlarmFragment extends Fragment {
 
     private static final String DIALOG_TIME_PICKER = "TIME_PICKER";
     private static final int REQUEST_ALARM_TIME = 1;
+    private static final int REQUEST_AUTOCOMPLETE = 2;
 
     private AddAlarmViewModel mViewModel;
     private FragmentAddAlarmBinding mBinding;
@@ -33,11 +41,13 @@ public class AddAlarmFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mBinding = FragmentAddAlarmBinding.inflate(inflater, container, false);
-
         mViewModel = ViewModelProviders.of(this).get(AddAlarmViewModel.class);
 
+        Places.initialize(getContext(), getString(R.string.google_maps_api_key));
+
         AddAlarmActionListener actionListener = getAddAlarmActionListener();
+
+        mBinding = FragmentAddAlarmBinding.inflate(inflater, container, false);
         mBinding.setActionListener(actionListener);
         mBinding.setViewModel(mViewModel);
         mBinding.setLifecycleOwner(this);
@@ -58,6 +68,11 @@ public class AddAlarmFragment extends Fragment {
             public void onSetRepeatClicked() {
                 mViewModel.mRepeated.set(!mViewModel.mRepeated.get());
             }
+
+            @Override
+            public void onSetLocationClicked() {
+                setupLocationPicker();
+            }
         };
     }
 
@@ -67,18 +82,24 @@ public class AddAlarmFragment extends Fragment {
         dialogFragment.show(getFragmentManager(), DIALOG_TIME_PICKER);
     }
 
+    private void setupLocationPicker() {
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).build(getContext());
+        startActivityForResult(intent, REQUEST_AUTOCOMPLETE);
+    }
+
     private void setupDaySelectionListener() {
         mBinding.addAlarmDayPicker.setDaySelectionChangedListener(new MaterialDayPicker.DaySelectionChangedListener() {
             @Override
             public void onDaySelectionChanged(List<Weekday> list) {
                 boolean[] activeDays = mViewModel.mActiveDays.get().clone();
-                activeDays[0] = list.indexOf(Weekday.SUNDAY) > 0;
-                activeDays[1] = list.indexOf(Weekday.MONDAY) > 0;
-                activeDays[2] = list.indexOf(Weekday.TUESDAY) > 0;
-                activeDays[3] = list.indexOf(Weekday.WEDNESDAY) > 0;
-                activeDays[4] = list.indexOf(Weekday.THURSDAY) > 0;
-                activeDays[5] = list.indexOf(Weekday.FRIDAY) > 0;
-                activeDays[6] = list.indexOf(Weekday.SATURDAY) > 0;
+                activeDays[0] = list.contains(Weekday.SUNDAY);
+                activeDays[1] = list.contains(Weekday.MONDAY);
+                activeDays[2] = list.contains(Weekday.TUESDAY);
+                activeDays[3] = list.contains(Weekday.WEDNESDAY);
+                activeDays[4] = list.contains(Weekday.THURSDAY);
+                activeDays[5] = list.contains(Weekday.FRIDAY);
+                activeDays[6] = list.contains(Weekday.SATURDAY);
                 mViewModel.mActiveDays.set(activeDays);
             }
         });
@@ -95,6 +116,10 @@ public class AddAlarmFragment extends Fragment {
                 Calendar calendarResponse = Calendar.getInstance();
                 calendarResponse.setTimeInMillis(data.getLongExtra(AlarmTimeDialog.OUT_DATE, 0));
                 mViewModel.mAlarmTime.set(calendarResponse);
+                break;
+            case REQUEST_AUTOCOMPLETE:
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                mViewModel.mLocation.set(place);
                 break;
         }
 

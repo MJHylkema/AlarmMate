@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">AlarmMate</string>
+    <string name="google_maps_api_key"></string>
 
     <!-- AddAlarmFragment -->
     <string name="alarm">Alarm</string>
     <string name="time">Time</string>
     <string name="repeat">Repeat</string>
     <string name="condition">Condition</string>
+    <string name="location">Location</string>
 
 </resources>
